@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f5a7c7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Baby Journey">
+<meta name="description" content="Отслеживание беременности — каждый день вместе">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" id="appleTouchIcon" href="">
+<link rel="icon" type="image/png" id="faviconIcon" href="">
+<title>Baby Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SPLASH / ONBOARDING -->
+<div id="splash" class="splash-screen">
+  <div class="splash-content">
+    <div class="splash-logo">
+      <div class="splash-icon">🌸</div>
+      <h1 class="splash-title">Baby Journey</h1>
+      <p class="splash-sub">каждый день вместе</p>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING -->
+<div id="onboarding" class="onboarding hidden">
+  <div class="onboarding-slides">
+    <div class="onb-slide active" data-slide="0">
+      <div class="onb-illustration">🤰</div>
+      <h2>Добро пожаловать</h2>
+      <p>Baby Journey — твой личный дневник беременности. Следи за развитием малыша каждый день.</p>
+    </div>
+    <div class="onb-slide" data-slide="1">
+      <div class="onb-illustration">📅</div>
+      <h2>Точный расчёт</h2>
+      <p>Введи дату последнего УЗИ и срок — мы рассчитаем всё сами: до дня, до часа.</p>
+    </div>
+    <div class="onb-slide" data-slide="2">
+      <div class="onb-illustration">💜</div>
+      <h2>Только для тебя</h2>
+      <p>Все данные хранятся только на твоём устройстве. Работает без интернета.</p>
+    </div>
+  </div>
+  <div class="onb-dots">
+    <span class="onb-dot active"></span>
+    <span class="onb-dot"></span>
+    <span class="onb-dot"></span>
+  </div>
+  <button class="onb-next btn-primary" id="onbNext">Далее</button>
+  <button class="onb-skip" id="onbSkip">Пропустить</button>
+</div>
+
+<!-- SETUP SCREEN -->
+<div id="setup" class="setup-screen hidden">
+  <div class="setup-inner">
+    <button class="back-btn" id="setupBack">←</button>
+    <div class="setup-header">
+      <div class="setup-emoji">🌱</div>
+      <h2>Настройка беременности</h2>
+      <p>Расскажи о своём сроке</p>
+    </div>
+
+    <div class="setup-tabs">
+      <button class="stab active" data-tab="uzi">По УЗИ</button>
+      <button class="stab" data-tab="manual">Вручную</button>
+      <button class="stab" data-tab="lmp">По последней менструации</button>
+    </div>
+
+    <div class="setup-form" id="setupFormUzi">
+      <label class="form-label">Дата УЗИ</label>
+      <input type="date" class="form-input" id="uziDate">
+      <label class="form-label">Недель на момент УЗИ</label>
+      <div class="num-row">
+        <input type="number" class="form-input num-input" id="uziWeeks" placeholder="0" min="0" max="42">
+        <span class="num-label">нед.</span>
+        <input type="number" class="form-input num-input" id="uziDays" placeholder="0" min="0" max="6">
+        <span class="num-label">дн.</span>
+      </div>
+    </div>
+
+    <div class="setup-form hidden" id="setupFormManual">
+      <label class="form-label">Текущий срок</label>
+      <div class="num-row">
+        <input type="number" class="form-input num-input" id="manWeeks" placeholder="0" min="0" max="42">
+        <span class="num-label">нед.</span>
+        <input type="number" class="form-input num-input" id="manDays" placeholder="0" min="0" max="6">
+        <span class="num-label">дн.</span>
+      </div>
+      <label class="form-label">Дата (сегодня или другая)</label>
+      <input type="date" class="form-input" id="manDate">
+    </div>
+
+    <div class="setup-form hidden" id="setupFormLmp">
+      <label class="form-label">Дата последней менструации</label>
+      <input type="date" class="form-input" id="lmpDate">
+    </div>
+
+    <div class="setup-extra">
+      <label class="form-label">Имя малыша (необязательно)</label>
+      <input type="text" class="form-input" id="babyName" placeholder="Например: Солнышко">
+      <label class="form-label">Пол малыша</label>
+      <div class="gender-row">
+        <button class="gender-btn active" data-gender="unknown">🤍 Пока секрет</button>
+        <button class="gender-btn" data-gender="girl">💗 Девочка</button>
+        <button class="gender-btn" data-gender="boy">💙 Мальчик</button>
+      </div>
+    </div>
+
+    <button class="btn-primary setup-go" id="setupGo">Начать путешествие 🌸</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="app hidden">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="papa-badge">
+        <span class="papa-heart">💙</span>
+        <span class="papa-text">сделано с любовью<br><strong>ПАПА ШАБДАН</strong></span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" id="themeToggle" title="Сменить тему">🌙</button>
+      <button class="icon-btn" id="settingsBtn" title="Настройки">⚙️</button>
+    </div>
+  </header>
+
+  <!-- PAGES -->
+  <main class="pages">
+
+    <!-- PAGE: HOME -->
+    <div class="page active" id="pageHome">
+      <div class="page-scroll">
+
+        <!-- Hero Card -->
+        <div class="hero-card glass">
+          <div class="hero-top">
+            <div class="hero-left">
+              <div class="hero-label">Сегодня малышу</div>
+              <div class="hero-weeks" id="heroWeeks">— нед. — дн.</div>
+              <div class="hero-months" id="heroMonths">—</div>
+              <div class="hero-trimester badge" id="heroTrimester">— триместр</div>
+            </div>
+            <div class="hero-right">
+              <div class="baby-silhouette" id="babySilhouette">
+                <div class="baby-glow"></div>
+                <div class="baby-figure" id="babyFigure">🤰</div>
+              </div>
+            </div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-label">
+              <span>Прогресс беременности</span>
+              <span id="progressPct">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+          <div class="countdown-block">
+            <div class="countdown-num" id="countdownDays">—</div>
+            <div class="countdown-text">дней до предполагаемой даты родов</div>
+            <div class="edd-date" id="eddDate">ПДР: —</div>
+          </div>
+        </div>
+
+        <!-- Fruit Size Card -->
+        <div class="card glass fruit-card">
+          <div class="fruit-left">
+            <div class="fruit-emoji" id="fruitEmoji">🫐</div>
+            <div class="fruit-compare">
+              <div class="fruit-name" id="fruitName">размер малыша</div>
+              <div class="fruit-sizes">
+                <span>📏 <span id="babyLength">—</span> см</span>
+                <span>⚖️ <span id="babyWeight">—</span> г</span>
+              </div>
+            </div>
+          </div>
+          <div class="fruit-right">
+            <div class="fruit-fact" id="fruitFact">—</div>
+          </div>
+        </div>
+
+        <!-- Development Card -->
+        <div class="card glass">
+          <div class="card-header">
+            <span class="card-icon">✨</span>
+            <span class="card-title">Развитие малыша</span>
+          </div>
+          <div class="dev-content" id="devContent">
+            <p class="dev-text" id="devText">—</p>
+            <div class="dev-tags" id="devTags"></div>
+          </div>
+        </div>
+
+        <!-- Mom Card -->
+        <div class="card glass">
+          <div class="card-header">
+            <span class="card-icon">🌸</span>
+            <span class="card-title">Для мамы</span>
+          </div>
+          <div class="mom-list" id="momList"></div>
+        </div>
+
+        <!-- Today Card -->
+        <div class="card glass today-card">
+          <div class="card-header">
+            <span class="card-icon">🌤</span>
+            <span class="card-title">Сегодня</span>
+          </div>
+          <div class="today-quote" id="todayQuote">—</div>
+          <div class="today-tip" id="todayTip"></div>
+        </div>
+
+        <!-- Water reminder -->
+        <div class="card glass water-card">
+          <div class="water-header">
+            <span>💧 Вода сегодня</span>
+            <span class="water-count" id="waterCount">0 / 8</span>
+          </div>
+          <div class="water-glasses" id="waterGlasses"></div>
+          <button class="btn-sm" id="waterAdd">+ стакан</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PAGE: CALENDAR -->
+    <div class="page" id="pageCalendar">
+      <div class="page-scroll">
+        <div class="page-title">Календарь беременности</div>
+
+        <!-- Timeline -->
+        <div class="card glass">
+          <div class="timeline-header">Триместры</div>
+          <div class="trimester-timeline" id="trimesterTimeline"></div>
+        </div>
+
+        <!-- Week grid -->
+        <div class="card glass">
+          <div class="card-header">
+            <span class="card-icon">📅</span>
+            <span class="card-title">Недели</span>
+          </div>
+          <div class="week-grid" id="weekGrid"></div>
+        </div>
+
+        <!-- Notes -->
+        <div class="card glass">
+          <div class="card-header">
+            <span class="card-icon">📝</span>
+            <span class="card-title">Заметки</span>
+            <button class="btn-xs ml-auto" id="addNoteBtn">+</button>
+          </div>
+          <div class="notes-list" id="notesList">
+            <div class="empty-state">
+              <div class="empty-icon">📓</div>
+              <p>Пока нет заметок</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: DIARY -->
+    <div class="page" id="pageDiary">
+      <div class="page-scroll">
+        <div class="page-title">Фото-дневник</div>
+        <div class="card glass">
+          <div class="card-header">
+            <span class="card-icon">📸</span>
+            <span class="card-title">Мой животик</span>
+            <button class="btn-xs ml-auto" id="addPhotoBtn">+ фото</button>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" class="hidden" capture="environment">
+          <div class="photo-grid" id="photoGrid">
+            <div class="empty-state">
+              <div class="empty-icon">🌸</div>
+              <p>Добавь первое фото</p>
+              <button class="btn-sm" id="addPhotoBtn2">Добавить фото</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weight tracker -->
+        <div class="card glass">
+          <div class="card-header">
+            <span class="card-icon">⚖️</span>
+            <span class="card-title">Вес мамы</span>
+            <button class="btn-xs ml-auto" id="addWeightBtn">+</button>
+          </div>
+          <div class="weight-list" id="weightList">
+            <div class="empty-state"><div class="empty-icon">📊</div><p>Добавь первый замер</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: TOOLS -->
+    <div class="page" id="pageTools">
+      <div class="page-scroll">
+        <div class="page-title">Инструменты</div>
+
+        <!-- Kicks counter -->
+        <div class="card glass kicks-card">
+          <div class="card-header">
+            <span class="card-icon">👣</span>
+            <span class="card-title">Счётчик шевелений</span>
+            <span class="kicks-date badge" id="kicksDateBadge"></span>
+          </div>
+          <div class="kicks-center">
+            <button class="kicks-btn" id="kicksBtn">
+              <span class="kicks-num" id="kicksNum">0</span>
+              <span class="kicks-label">шевелений</span>
+            </button>
+          </div>
+          <div class="kicks-stats" id="kicksStats"></div>
+          <button class="btn-sm secondary" id="kicksReset">Сбросить за сегодня</button>
+        </div>
+
+        <!-- Contractions timer -->
+        <div class="card glass contractions-card">
+          <div class="card-header">
+            <span class="card-icon">⏱</span>
+            <span class="card-title">Таймер схваток</span>
+          </div>
+          <div class="contr-display">
+            <div class="contr-timer" id="contrTimer">00:00</div>
+            <div class="contr-status" id="contrStatus">Нажми для начала</div>
+          </div>
+          <button class="btn-primary contr-btn" id="contrBtn">Начать схватку</button>
+          <div class="contr-list" id="contrList"></div>
+          <div class="contr-avg" id="contrAvg"></div>
+        </div>
+
+        <!-- Hospital bag -->
+        <div class="card glass">
+          <div class="card-header">
+            <span class="card-icon">🎒</span>
+            <span class="card-title">Список в роддом</span>
+            <span class="badge" id="bagProgress">0%</span>
+          </div>
+          <div class="bag-categories" id="bagCategories"></div>
+          <div class="bag-add-row">
+            <input type="text" class="form-input flex-1" id="bagItemInput" placeholder="Добавить свой пункт">
+            <button class="btn-sm" id="bagAddBtn">+</button>
+          </div>
+        </div>
+
+        <!-- Name generator -->
+        <div class="card glass">
+          <div class="card-header">
+            <span class="card-icon">💝</span>
+            <span class="card-title">Генератор имён</span>
+          </div>
+          <div class="name-tabs">
+            <button class="ntab active" data-gender="girl">Для девочки</button>
+            <button class="ntab" data-gender="boy">Для мальчика</button>
+          </div>
+          <div class="name-result" id="nameResult">
+            <div class="name-big" id="nameBig">—</div>
+            <div class="name-meaning" id="nameMeaning">—</div>
+          </div>
+          <div class="name-favorites" id="nameFavorites"></div>
+          <div class="name-btns">
+            <button class="btn-sm" id="generateName">✨ Новое имя</button>
+            <button class="btn-sm secondary" id="saveName">♥ В избранное</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PAGE: PROFILE -->
+    <div class="page" id="pageProfile">
+      <div class="page-scroll">
+        <div class="page-title">Профиль</div>
+
+        <div class="card glass profile-card">
+          <div class="profile-avatar" id="profileAvatar">🤰</div>
+          <div class="profile-name" id="profileName">Моя беременность</div>
+          <div class="profile-sub" id="profileSub">—</div>
+        </div>
+
+        <div class="card glass">
+          <div class="card-header"><span class="card-icon">✏️</span><span class="card-title">Изменить срок</span></div>
+          <div class="edit-preg-form">
+            <div class="edit-tabs">
+              <button class="etab active" data-tab="uzi">По УЗИ</button>
+              <button class="etab" data-tab="manual">Вручную</button>
+              <button class="etab" data-tab="lmp">По менструации</button>
+            </div>
+            <div class="edit-form" id="editFormUzi">
+              <label class="form-label">Дата УЗИ</label>
+              <input type="date" class="form-input" id="editUziDate">
+              <div class="num-row">
+                <input type="number" class="form-input num-input" id="editUziWeeks" placeholder="0" min="0" max="42">
+                <span class="num-label">нед.</span>
+                <input type="number" class="form-input num-input" id="editUziDays" placeholder="0" min="0" max="6">
+                <span class="num-label">дн.</span>
+              </div>
+            </div>
+            <div class="edit-form hidden" id="editFormManual">
+              <label class="form-label">Текущий срок</label>
+              <div class="num-row">
+                <input type="number" class="form-input num-input" id="editManWeeks" placeholder="0" min="0" max="42">
+                <span class="num-label">нед.</span>
+                <input type="number" class="form-input num-input" id="editManDays" placeholder="0" min="0" max="6">
+                <span class="num-label">дн.</span>
+              </div>
+              <label class="form-label">Дата замера</label>
+              <input type="date" class="form-input" id="editManDate">
+            </div>
+            <div class="edit-form hidden" id="editFormLmp">
+              <label class="form-label">Дата последней менструации</label>
+              <input type="date" class="form-input" id="editLmpDate">
+            </div>
+            <button class="btn-primary" id="savePregnancyEdit">Сохранить изменения</button>
+          </div>
+        </div>
+
+        <div class="card glass">
+          <div class="card-header"><span class="card-icon">👶</span><span class="card-title">О малыше</span></div>
+          <label class="form-label">Имя малыша</label>
+          <input type="text" class="form-input" id="profileBabyName" placeholder="Имя или прозвище">
+          <label class="form-label">Пол</label>
+          <div class="gender-row">
+            <button class="gender-btn active" data-gender="unknown" id="genderUnknown">🤍 Секрет</button>
+            <button class="gender-btn" data-gender="girl" id="genderGirl">💗 Девочка</button>
+            <button class="gender-btn" data-gender="boy" id="genderBoy">💙 Мальчик</button>
+          </div>
+          <button class="btn-primary" id="saveBabyInfo" style="margin-top:12px">Сохранить</button>
+        </div>
+
+        <div class="card glass">
+          <div class="card-header"><span class="card-icon">⚙️</span><span class="card-title">Настройки</span></div>
+          <div class="settings-row">
+            <span>Тёмная тема</span>
+            <label class="toggle">
+              <input type="checkbox" id="darkModeToggle">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="settings-row">
+            <span>Напоминания о воде</span>
+            <label class="toggle">
+              <input type="checkbox" id="waterReminder" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <button class="btn-sm secondary" id="exportData" style="margin-top:12px">📤 Экспорт данных</button>
+          <button class="btn-sm danger" id="resetApp" style="margin-top:8px">🗑 Сбросить всё</button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-page="pageHome">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Главная</span>
+    </button>
+    <button class="nav-btn" data-page="pageCalendar">
+      <span class="nav-icon">📅</span>
+      <span class="nav-label">Календарь</span>
+    </button>
+    <button class="nav-btn" data-page="pageDiary">
+      <span class="nav-icon">📸</span>
+      <span class="nav-label">Дневник</span>
+    </button>
+    <button class="nav-btn" data-page="pageTools">
+      <span class="nav-icon">🛠</span>
+      <span class="nav-label">Инструменты</span>
+    </button>
+    <button class="nav-btn" data-page="pageProfile">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Профиль</span>
+    </button>
+  </nav>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal glass" id="modalContent">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast hidden" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
